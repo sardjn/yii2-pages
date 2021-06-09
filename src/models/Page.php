@@ -42,6 +42,7 @@ class Page extends ActiveRecord
                 'attribute' => 'title',
                 'slugAttribute' => 'alias',
                 'immutable' => true,
+                'ensureUnique' => true,
             ],
             'timestamp' => [
                 'class' => TimestampBehavior::class,
@@ -70,7 +71,7 @@ class Page extends ActiveRecord
         return [
             [['title'], 'required'],
             [['display_title', 'published'], 'boolean'],
-            [['content'], 'string', 'max' => 65535],
+            [['content'], 'string', 'max' => 16777215],
             [['title', 'alias', 'title_browser'], 'string', 'max' => 255],
             [['meta_keywords'], 'string', 'max' => 200],
             [['meta_description'], 'string', 'max' => 160],

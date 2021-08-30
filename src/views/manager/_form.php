@@ -10,6 +10,9 @@ use yii\helpers\Url;
 /* @var $model bupy7\pages\models\Page */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $module bupy7\pages\Module */
+/* @var $initForm bool */
+/* @var $fieldsToShow array */
+/* @var $contentAsText bool */
 
 $defaultParams = [
     'initForm' => true,
@@ -23,6 +26,7 @@ $defaultParams = [
         'meta_keywords',
         'meta_description',
     ],
+    'contentAsText' => false,
 ];
 
 foreach ($defaultParams as $defaultParam => $defaultValue) {
@@ -63,14 +67,21 @@ if ($module->uploadFile) {
     $settings['fileUpload'] = Url::to(['file-upload']);
 }
 
+$contentField = $form->field($model, 'content');
+if($contentAsText) {
+    $contentField->textarea(['rows' => 6]);
+} else {
+    $contentField->widget(Imperavi::class, [
+        'settings' => $settings,
+    ]);
+}
+
 $fields = [
     'title' => $form->field($model, 'title')->textInput(['maxlength' => 255]),
     'display_title' => $form->field($model, 'display_title')->checkbox(),
     'alias' => $form->field($model, 'alias')->textInput(['maxlength' => 255]),
     'published' => $form->field($model, 'published')->checkbox(),
-    'content' => $form->field($model, 'content')->widget(Imperavi::class, [
-        'settings' => $settings,
-    ]),
+    'content' => $contentField,
     'title_browser' => $form->field($model, 'title_browser')->textInput(['maxlength' => 255]),
     'meta_keywords' => $form->field($model, 'meta_keywords')->textInput(['maxlength' => 200]),
     'meta_description' => $form->field($model, 'meta_description')->textInput(['maxlength' => 160]),

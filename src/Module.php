@@ -19,60 +19,23 @@ class Module extends \yii\base\Module
      * @see \yii\db\ActiveRecord::tableName()
      */
     public $tableName = '{{%page}}';
+
     /**
-     * @var boolean Enable ability add images via Imperavi Redactor? If this property is 'true', you must be
-     * set property '$pathToImages' and '$urlToImages'.
+     * @var array The default options for TinyMCE editor.
+     * @see https://github.com/2amigos/yii2-tinymce-widget/
+     * @since 1.5.0
      */
-    public $addImage = false;
-    /**
-     * @var boolean Enable ability upload images via Imperavi Redactor? If this property is 'true', you must be
-     * set property '$pathToImages', '$urlToImages' and '$imageUploadAction'.
-     */
-    public $uploadImage = false;
-    /**
-     * @var string Alias of absolute path to directory with images for upload images via Imperavi Redactor. If not
-     * set, then this ability not used.
-     * @example '@webroot/uploads/images'
-     * @see \vova07\imperavi\actions\GetAction::$path
-     */
-    public $pathToImages;
-    /**
-     * @var string Alias of URL to directory with images for get images uploaded via Imperavi Redactor. If not set,
-     * then this ability not used.
-     * @example '@web/uploads/images'
-     * @see \vova07\imperavi\actions\GetAction::$url
-     */
-    public $urlToImages;
-    /**
-     * @var boolean Enable ability add files via Imperavi Redactor? If this property is 'true', you must be
-     * set property '$pathToFiles' and '$urlToFiles'.
-     */
-    public $addFile = false;
-    /**
-     * @var boolean Enable ability upload files via Imperavi Redactor? If this property is 'true', you must be
-     * set property '$pathToFiles', '$urlToFiles' and '$fileUploadAction'.
-     */
-    public $uploadFile = false;
-    /**
-     * @var string Alias of absolute path to directory with files for upload files via Imperavi Redactor. If not set,
-     * then this ability not used.
-     * @example '@webroot/uploads/files'
-     * @see \vova07\imperavi\actions\GetAction::$path
-     */
-    public $pathToFiles;
-    /**
-     * @var string Alias of URL to directory with files for uploaded files via Imperavi Redactor. If not set, then
-     * this ability not used.
-     * @example '@web/uploads/files'
-     * @see \vova07\imperavi\actions\GetAction::$url
-     */
-    public $urlToFiles;
-    /**
-     * @var string The language of interface Imperavi redactor.
-     * @see https://imperavi.com/redactor/docs/languages/
-     * @since 1.2.0
-     */
-    public $imperaviLanguage;
+    public $editorOptions = [
+        'options' => ['rows' => 20],
+        'clientOptions' => [
+            'plugins' => [
+                "advlist autolink lists link charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table contextmenu paste"
+            ],
+            'toolbar' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+        ]
+    ];
     
     /**
      * @inheritdoc
@@ -80,19 +43,6 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
-        if (($this->addImage || $this->uploadImage) && !($this->pathToImages && $this->urlToImages)) {
-            throw new InvalidConfigException("For add or upload image via Imperavi Redactor you must be set"
-                . " 'pathToImages' and 'urlToImages'.");
-        }
-        if (($this->addFile || $this->uploadFile) && !($this->pathToFiles && $this->urlToFiles)) {
-            throw new InvalidConfigException("For add or upload file via Imperavi Redactor you must be set"
-                . " 'pathToFiles' and 'urlToFiles'.");
-        }
-        if (!$this->imperaviLanguage) {
-            if (stripos(Yii::$app->language, 'en') !== 0) {
-                $this->imperaviLanguage = substr(Yii::$app->language, 0, 2);
-            }
-        }
         $this->registerTranslations();
     }
     

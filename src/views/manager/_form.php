@@ -1,5 +1,7 @@
 <?php
 
+use dosamigos\tinymce\TinyMce;
+use yetopen\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use bupy7\pages\Module;
@@ -27,6 +29,7 @@ $defaultParams = [
         'meta_description',
     ],
     'contentAsText' => false,
+    'editorOptions' => $module->editorOptions,
 ];
 
 foreach ($defaultParams as $defaultParam => $defaultValue) {
@@ -45,35 +48,13 @@ $settings = [
         'fullscreen',
     ],
 ];
-if ($module->imperaviLanguage) {
-    $settings['lang'] = $module->imperaviLanguage;
-}
-if ($module->addImage || $module->uploadImage) {
-    $settings['plugins'][] = 'imagemanager';
-}
-if ($module->addImage) {
-    $settings['imageManagerJson'] = Url::to(['images-get']);
-}
-if ($module->uploadImage) {
-    $settings['imageUpload'] = Url::to(['image-upload']);
-}
-if ($module->addFile || $module->uploadFile) {
-    $settings['plugins'][] = 'filemanager';
-}
-if ($module->addFile) {
-    $settings['fileManagerJson'] = Url::to(['files-get']);
-}
-if ($module->uploadFile) {
-    $settings['fileUpload'] = Url::to(['file-upload']);
-}
 
 $contentField = $form->field($model, 'content');
 if($contentAsText) {
     $contentField->textarea(['rows' => 6]);
 } else {
-    $contentField->widget(Imperavi::class, [
-        'settings' => $settings,
-    ]);
+    $editorOptions = ArrayHelper::merge(['language' => Yii::$app->language], $editorOptions);
+    $contentField->widget(TinyMce::class, $editorOptions);
 }
 
 $fields = [

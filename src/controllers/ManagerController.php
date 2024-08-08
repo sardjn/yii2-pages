@@ -34,53 +34,6 @@ class ManagerController extends Controller
             ],
         ];
     }
-    
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        /** @var \bupy7\pages\Module $module */
-        $module = Yii::$app->getModule('pages');
-        
-        $actions = [];
-        
-        // add images that have already been uploaded
-        if ($module->addImage) {
-            $actions['images-get'] = [
-                'class' => GetImagesAction::class,
-                'url' => Yii::getAlias($module->urlToImages),
-                'path' => Yii::getAlias($module->pathToImages),
-            ];
-        }
-        // upload image
-        if ($module->uploadImage) {
-            $actions['image-upload'] = [
-                'class' => UploadFileAction::class,
-                'url' => Yii::getAlias($module->urlToImages),
-                'path' => Yii::getAlias($module->pathToImages),
-            ];
-        }
-        // add files that have already been uploaded
-        if ($module->addFile) {
-            $actions['files-get'] = [
-                'class' => GetFilesAction::class,
-                'url' => Yii::getAlias($module->urlToFiles),
-                'path' => Yii::getAlias($module->pathToFiles),
-            ];
-        }
-        // upload file
-        if ($module->uploadFile) {
-            $actions['file-upload'] = [
-                'class' => UploadFileAction::class,
-                'url' => Yii::getAlias($module->urlToFiles),
-                'path' => Yii::getAlias($module->pathToFiles),
-                'uploadOnlyImage' => false,
-            ];
-        }
-        
-        return $actions;
-    }
 
     /**
      * Lists all Page models.
